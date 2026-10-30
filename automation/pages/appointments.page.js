@@ -93,3 +93,5 @@ class AppointmentsPage {
 }
 
 module.exports = { AppointmentsPage };
+
+
