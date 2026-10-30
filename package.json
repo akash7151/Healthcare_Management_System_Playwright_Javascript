@@ -1,0 +1,28 @@
+{
+  "name": "psb-digital-banking-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "db:validate": "npm --prefix backend run prisma:validate",
+    "db:migrate": "npm --prefix backend run prisma:deploy",
+    "db:seed": "npm --prefix backend run prisma:seed",
+    "db:check": "npm --prefix backend run db:check",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "test": "node scripts/run-playwright.js",
+    "test:e2e": "node scripts/run-playwright.js --project=chromium",
+    "test:e2e:headed": "node scripts/run-playwright.js --project=chromium --headed --workers=1",
+    "test:e2e:report": "playwright show-report automation/reports/html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6"
+  }
+}

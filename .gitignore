@@ -1,0 +1,19 @@
+
+# Dependencies and build output
+node_modules/
+dist/
+
+# Secrets
+.env
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/automation/reports/html/
+/automation/reports/junit/
+/automation/reports/test-results/
+/automation/test-data/generated/*
+!/automation/test-data/generated/.gitkeep

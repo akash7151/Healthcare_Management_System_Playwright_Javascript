@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-10-29T14:41:00+05:30",
+  "modules": {
+    "foundation": "Verified",
+    "authentication": "Verified",
+    "patients": "Verified",
+    "appointments": "Verified",
+    "records": "Verified",
+    "billing": "Verified",
+    "reports": "Verified",
+    "qa": "Verified"
+  },
+  "commands": [
+    {
+      "name": "vitest",
+      "passed": true,
+      "summary": "10 passed (invoice arithmetic, status transitions, auth, patients, appointment conflicts, billing, clinical access)"
+    },
+    {
+      "name": "playwright --project=chromium",
+      "passed": true,
+      "summary": "5 passed (invalid login, login and logout, patient role restriction, patient registration and search, overlapping slot)"
+    }
+  ]
+}
