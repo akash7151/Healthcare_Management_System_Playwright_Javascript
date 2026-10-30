@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Healthcare Management
 
 Local clinic demo. Checkpoint 1 is the project skeleton, MySQL schema, migration, and fictional seed data. Login, scheduling workflows, clinical editing, billing actions, and automated test suites are later checkpoints.
@@ -66,3 +67,7 @@ Authentication is not implemented yet. Seed users share one local password so th
 - `GET /api/status` returns database connectivity and record counts only
 
 The home page reads `/api/status`.
+=======
+# Healthcare_Management_System_Playwright_Javascript
+A complete healthcare application with frontend, backend, database configuration, and Playwright automation tests.
+>>>>>>> a3e6ec1c5d3013ee2bd2ba65f832a69ca05e4677
