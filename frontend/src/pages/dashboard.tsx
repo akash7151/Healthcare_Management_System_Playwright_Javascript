@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../api";
 import { Alert, PageTitle, formatWhen } from "../ui";
 
 type Dashboard = {
@@ -37,7 +38,7 @@ export function DashboardPage() {
     const params = new URLSearchParams();
     if (from) params.set("from", from);
     if (to) params.set("to", to);
-    fetch(`/api/reports/dashboard?${params.toString()}`, { credentials: "include", signal: controller.signal })
+    fetch(apiUrl(`/api/reports/dashboard?${params.toString()}`), { credentials: "include", signal: controller.signal })
       .then(async (response) => {
         const body = (await response.json()) as Dashboard & { error?: string };
         if (!response.ok) {

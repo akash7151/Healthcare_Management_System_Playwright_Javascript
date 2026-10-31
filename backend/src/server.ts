@@ -22,15 +22,29 @@ const server = app.listen(env.PORT, "0.0.0.0", () => {
   }
 });
 
-async function shutdown() {
-  server.close();
-  await prisma.$disconnect();
+let shuttingDown = false;
+
+function shutdown(signal: string): void {
+  if (shuttingDown) {
+    return;
+  }
+  shuttingDown = true;
+  console.log(`Received ${signal}. Closing the HTTP server.`);
+  const timer = setTimeout(() => {
+    console.error("Shutdown timed out.");
+    process.exit(1);
+  }, 10_000);
+  timer.unref();
+  server.close(() => {
+    void prisma
+      .$disconnect()
+      .catch(() => undefined)
+      .finally(() => {
+        clearTimeout(timer);
+        process.exit(0);
+      });
+  });
 }
 
-process.on("SIGINT", () => {
-  void shutdown().finally(() => process.exit(0));
-});
-
-process.on("SIGTERM", () => {
-  void shutdown().finally(() => process.exit(0));
-});
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));

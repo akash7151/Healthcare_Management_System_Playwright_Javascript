@@ -1,3 +1,12 @@
+/** Empty in local dev so the Vite proxy keeps `/api` on the same origin. */
+export function apiUrl(path: string): string {
+  if (!path.startsWith("/")) {
+    throw new Error("API paths must start with /");
+  }
+  const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
+  return `${base}${path}`;
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -8,7 +17,7 @@ export class ApiError extends Error {
 }
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, {
+  const response = await fetch(apiUrl(path), {
     ...init,
     credentials: "include",
     headers: {

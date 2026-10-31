@@ -47,8 +47,8 @@ export default defineConfig({
     baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    trace: process.env.CI ? "retain-on-failure" : "on-first-retry",
+    screenshot: "only-on-failure",
   },
 
   /* Configure projects for major browsers */
@@ -61,7 +61,12 @@ export default defineConfig({
     {
       name: 'chromium',
       dependencies: ['setup'],
-      testIgnore: '**/auth.setup.js',
+      testIgnore: ['**/auth.setup.js', '**/staging-smoke.spec.js'],
+      use: { ...devices['Desktop Chrome'], ...visibleBrowser },
+    },
+    {
+      name: 'smoke',
+      testMatch: '**/staging-smoke.spec.js',
       use: { ...devices['Desktop Chrome'], ...visibleBrowser },
     },
 

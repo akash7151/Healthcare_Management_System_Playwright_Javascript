@@ -38,7 +38,11 @@ export function LoginPage() {
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
       <p className="text-xs font-semibold uppercase tracking-wide text-teal-800">Clinic Demo</p>
       <h1 className="mt-2 text-3xl font-semibold">Sign in</h1>
-      <p className="mt-2 text-sm text-stone-600">Use a fictional demo account. The seed password is DemoPass123!.</p>
+      <p className="mt-2 text-sm text-stone-600">
+        {import.meta.env.DEV
+          ? "Use a fictional local demo account. The password is not shown here."
+          : "Use the fictional staging account issued for this environment."}
+      </p>
       <form className="mt-6 space-y-4" onSubmit={(event) => void submit(event)}>
         {error ? <Alert tone="error">{error}</Alert> : null}
         <Field label="Email">

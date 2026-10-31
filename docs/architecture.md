@@ -25,7 +25,7 @@ The clinic app uses the existing MySQL database `healthcare_db`. Checkpoint 1 sc
 
 ## Roles
 
-`ADMIN`, `DOCTOR`, `RECEPTIONIST`, `PATIENT`, and `BILLING_STAFF`. Permission codes are seeded. The API does not enforce them until the authentication checkpoint.
+`ADMIN`, `DOCTOR`, `RECEPTIONIST`, `PATIENT`, and `BILLING_STAFF`. Permission codes are seeded, and the API enforces them with `requirePermission`. There is no separate receptionist-admin role.
 
 ## Failure handling
 

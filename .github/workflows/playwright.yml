@@ -1,27 +1,33 @@
-name: Playwright Tests
+name: Checks
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, deployment/staging]
   pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
+
 jobs:
-  test:
-    timeout-minutes: 60
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm ci --prefix backend
+          npm ci --prefix frontend
+      - name: Validate Prisma and build the API
+        working-directory: backend
+        env:
+          DATABASE_URL: mysql://prisma:prisma@127.0.0.1:3306/healthcare_db
+        run: |
+          npx prisma validate
+          npx prisma generate
+          npm run build
+      - name: Build the frontend
+        working-directory: frontend
+        run: npm run build

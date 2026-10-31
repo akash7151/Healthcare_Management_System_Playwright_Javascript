@@ -1,11 +1,9 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient, type AppointmentStatus } from "@prisma/client";
+import { assertSyntheticSeedAllowed, seedPassword } from "./seed-policy";
 
 const prisma = new PrismaClient();
-
-/** Fictional local demo password. Never log this value. */
-const DEMO_PASSWORD = "DemoPass123!";
 
 const PERMISSIONS: Array<[string, string]> = [
   ["patients:read", "View patient demographics"],
@@ -85,7 +83,12 @@ function dateOnly(isoDate: string): Date {
 }
 
 async function main() {
-  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is required.");
+  }
+  assertSyntheticSeedAllowed(databaseUrl);
+  const passwordHash = await bcrypt.hash(seedPassword(), 10);
 
   await prisma.$transaction(async (tx) => {
     for (const [code, description] of PERMISSIONS) {

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { api, ApiError, type Page } from "../api";
+import { api, ApiError, apiUrl, type Page } from "../api";
 import { can, useAuth } from "../auth";
 import { Alert, Empty, Field, PageTitle, Pager, PrimaryButton, SearchForm, Table, controlClass, formatWhen } from "../ui";
 
@@ -52,7 +52,7 @@ export function PatientsPage() {
     setLoading(true);
     const params = new URLSearchParams({ page: String(page), pageSize: "10" });
     if (q) params.set("q", q);
-    fetch(`/api/patients?${params}`, { credentials: "include", signal: controller.signal })
+    fetch(apiUrl(`/api/patients?${params}`), { credentials: "include", signal: controller.signal })
       .then(async (response) => {
         const body = (await response.json()) as Page<Patient> & { error?: string };
         if (!response.ok) throw new Error(body.error ?? "Could not load patients");

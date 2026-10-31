@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import { env } from "./config/env";
 import { prisma } from "./lib/prisma";
 import { originAllowed } from "./lib/origins";
 import { errorHandler } from "./middleware/errorHandler";
@@ -17,7 +18,12 @@ import { registerUserRoutes } from "./modules/users/routes";
 export const app = express();
 
 app.disable("x-powered-by");
-app.use(helmet());
+app.set("trust proxy", env.TRUST_PROXY);
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 app.use(
   cors({
     origin(origin, callback) {
@@ -29,7 +35,19 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+  res.json({
+    status: "ok",
+    revision: process.env.RENDER_GIT_COMMIT || process.env.GIT_COMMIT || null,
+  });
+});
+
+app.get("/api/ready", async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: "ready" });
+  } catch {
+    res.status(503).json({ status: "not_ready" });
+  }
 });
 
 app.get("/api/status", async (_req, res, next) => {

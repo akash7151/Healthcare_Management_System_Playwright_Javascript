@@ -1,9 +1,9 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { seedPassword } from "./seed-policy";
 
 const prisma = new PrismaClient();
-const DEMO_PASSWORD = "DemoPass123!";
 const BLOCKING_STATUSES = new Set([
   "SCHEDULED",
   "CONFIRMED",
@@ -43,8 +43,9 @@ async function main() {
 
   const user = await prisma.user.findUnique({ where: { email: "asha.menon@example.test" } });
   assert(user, "Seed admin user is missing");
-  assert(user.passwordHash !== DEMO_PASSWORD, "Password was stored in plaintext");
-  assert(await bcrypt.compare(DEMO_PASSWORD, user.passwordHash), "Password hash does not verify");
+  const password = seedPassword();
+  assert(user.passwordHash !== password, "Password was stored in plaintext");
+  assert(await bcrypt.compare(password, user.passwordHash), "Password hash does not verify");
 
   const appointments = await prisma.appointment.findMany({
     where: { status: { in: ["SCHEDULED", "CONFIRMED", "CHECKED_IN", "IN_PROGRESS", "COMPLETED"] } },

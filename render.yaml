@@ -1,0 +1,41 @@
+# Staging blueprint for the Express API.
+# Creating this file does not create a Render service and does not spend money.
+# Apply it only after you create a free Render workspace and approve the deploy.
+# Keep plan: free. Do not switch to a paid compute plan without explicit approval.
+
+services:
+  - type: web
+    name: healthcare-api-staging
+    runtime: node
+    plan: free
+    region: singapore
+    branch: deployment/staging
+    autoDeploy: false
+    rootDir: backend
+    buildCommand: npm ci && npx prisma generate && npm run build
+    preDeployCommand: npx prisma migrate deploy
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: CLINIC_TIMEZONE
+        value: Asia/Kolkata
+      - key: LOGIN_ATTEMPT_LIMIT
+        value: "20"
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false
+      - key: SEED_PASSWORD
+        sync: false
+      - key: SEED_CONFIRM
+        sync: false

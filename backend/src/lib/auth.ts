@@ -50,23 +50,31 @@ export function readCookie(req: Request, name: string): string | undefined {
   return undefined;
 }
 
+function cookieAttributes(secureRequested: boolean): { sameSite: "Lax" | "Strict" | "None"; secure: boolean } {
+  const sameSite = env.COOKIE_SAMESITE === "none" ? "None" : env.COOKIE_SAMESITE === "strict" ? "Strict" : "Lax";
+  const secure = sameSite === "None" || secureRequested || env.COOKIE_SECURE;
+  return { sameSite, secure };
+}
+
 export function setSessionCookie(res: Response, token: string, secure: boolean): void {
+  const attributes = cookieAttributes(secure);
   const flags = [
     `${SESSION_COOKIE}=${token}`,
     "HttpOnly",
     "Path=/",
-    "SameSite=Lax",
+    `SameSite=${attributes.sameSite}`,
     `Max-Age=${SESSION_MS / 1000}`,
   ];
-  if (secure) {
+  if (attributes.secure) {
     flags.push("Secure");
   }
   res.append("Set-Cookie", flags.join("; "));
 }
 
 export function clearSessionCookie(res: Response, secure: boolean): void {
-  const flags = [`${SESSION_COOKIE}=`, "HttpOnly", "Path=/", "SameSite=Lax", "Max-Age=0"];
-  if (secure) {
+  const attributes = cookieAttributes(secure);
+  const flags = [`${SESSION_COOKIE}=`, "HttpOnly", "Path=/", `SameSite=${attributes.sameSite}`, "Max-Age=0"];
+  if (attributes.secure) {
     flags.push("Secure");
   }
   res.append("Set-Cookie", flags.join("; "));
