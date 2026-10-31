@@ -48,12 +48,16 @@ The smoke file is read-only aside from signing in and signing out:
 
 Those checks follow the permissions seeded for `RECEPTIONIST`, `BILLING_STAFF`, and `PATIENT`. They do not create patients, appointments, or invoices. The longer chromium specs still create fictional rows and should stay on the local database.
 
+`npm run test:staging` uses `playwright.staging.config.js`. It runs only `automation/test/staging-smoke.spec.js` against the public staging origin and does not start the local dev servers. The default origin is `https://rounds-cruise-stan-tricks.trycloudflare.com`. Set `STAGING_BASE_URL` when that host changes.
+
 ```bash
-set BASE_URL=https://YOUR_VERCEL_HOST
-set API_BASE_URL=https://YOUR_VERCEL_HOST
+npm run test:staging
+```
+
+```bash
+set STAGING_BASE_URL=https://YOUR_STAGING_HOST
 set E2E_PASSWORD=the-staging-password
-set CI=true
-npm run test:smoke
+npm run test:staging
 ```
 
 On PowerShell, set variables with `$env:BASE_URL = "https://YOUR_VERCEL_HOST"` and the same pattern for the other names.

@@ -15,6 +15,7 @@
     "test": "node scripts/run-playwright.js",
     "test:e2e": "node scripts/run-playwright.js --project=chromium",
     "test:smoke": "node scripts/run-playwright.js --project=smoke",
+    "test:staging": "node scripts/run-playwright.js --config=playwright.staging.config.js",
     "test:api": "npm --prefix backend test",
     "test:e2e:headed": "node scripts/run-playwright.js --project=chromium --headed --workers=1",
     "test:e2e:report": "playwright show-report automation/reports/html"
